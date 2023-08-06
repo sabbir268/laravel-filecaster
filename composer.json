@@ -1,7 +1,18 @@
 {
     "name": "sabbirh/laravel-filecaster",
     "description": "A simple file casting for laravel model to handle file upload and retrieve",
-    "type": "composer-plugin",
+    "keywords": [
+        "file",
+        "file-upload",
+        "file-casting",
+        "file-retrieve",
+        "file-upload-laravel",
+        "file-casting-laravel",
+        "file-retrieve-laravel",
+        "laravel-file-upload",
+        "laravel-casting"
+    ],
+    "homepage": "https://github.com/sabbir268/laravel-filecaster",
     "license": "MIT",
     "autoload": {
         "psr-4": {

@@ -15,6 +15,11 @@ class FileCasterServiceProvider extends ServiceProvider
         $this->app->bind('laravel-filecaster', function () {
             return new FileCaster();
         });
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/filecaster.php',
+            'filecaster'
+        );
     }
 
     /**
@@ -22,6 +27,8 @@ class FileCasterServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // 
+        $this->publishes([
+            __DIR__ . '/../config/filecaster.php' => config_path('filecaster.php'),
+        ]);
     }
 }

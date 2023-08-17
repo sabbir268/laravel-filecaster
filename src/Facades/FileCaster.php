@@ -19,6 +19,6 @@ class FileCaster extends Facade
      */
     protected static function getFacadeAccessor(): String
     {
-        return 'laravel-filecaster';
+        return 'filecaster';
     }
 }

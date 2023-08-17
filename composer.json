@@ -25,7 +25,12 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4|^8.0",
+        "intervention/image": "^2.7"
+    },
+    "suggest": {
+        "ext-gd": "to use GD library based image processing.",
+        "ext-imagick": "to use Imagick based image processing."
     },
     "extra": {
         "laravel": {
@@ -33,7 +38,7 @@
                 "Sabbirh\\LaravelFileCaster\\FileCasterServiceProvider"
             ],
             "aliases": {
-                "FileCaster": "Sabbirh\\LaravelFileCaster\\FileCaster"
+                "FileCaster": "Sabbirh\\LaravelFileCaster\\\\FileCaster\\Facades"
             }
         }
     }

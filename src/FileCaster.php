@@ -19,7 +19,7 @@ class FileCaster implements CastsAttributes
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         $class = strtolower(substr(get_class($model), strrpos(get_class($model), '\\') + 1));
-        return new FileWrapper($value, $class, $attributes['id']);
+        return new FileWrapper($value, $model, $key);
     }
 
     /**
@@ -29,13 +29,13 @@ class FileCaster implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (request()->hasFile($key)) {
+        if (is_file($value)) {
             if (isset($attributes[$key])) {
                 if (Storage::disk('public')->exists($attributes[$key])) {
                     Storage::disk('public')->delete($attributes[$key]);
                 }
             }
-            $file = request()->file($key);
+            $file = $value;
             $class = strtolower(substr(get_class($model), strrpos(get_class($model), '\\') + 1));
             $id = $this->getId($attributes, $model);
             $filenameWithExt = $file->getClientOriginalName();

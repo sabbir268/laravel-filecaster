@@ -9,19 +9,21 @@ use Intervention\Image\Facades\Image;
 class FileWrapper
 {
     protected $value;
-    protected $className;
-    protected $id;
+    protected $model;
+    protected $key;
+
 
     protected $methods = [];
 
     protected $driver;
     protected $disk;
 
-    public function __construct($value, $className, $id)
+    public function __construct($value, $model, $key)
     {
         $this->value = $value;
-        $this->className = $className;
-        $this->id = $id;
+        $this->model = $model;
+        $this->key = $key;
+
         $this->driver = config('filecaster.driver');
         $this->disk = config('filecaster.disk') ? config('filecaster.disk') : 'public';
 
@@ -36,15 +38,22 @@ class FileWrapper
             'lastModified' => [$this, 'lastModified'],
             'exists' => [$this, 'exists'],
         ];
+        // check if value is empty or null
+        if ((empty($this->value) || is_null($this->value))) {
+            return $this->value = '';
+        }
 
-
-        if (!$this->value || ($this->value && !Storage::disk($this->disk)->exists($this->value))) {
-            return null;
+        if (!Storage::disk($this->disk)->exists($this->value)) {
+            return $this->value = '';
         }
     }
 
     public function __get($name)
     {
+        if (empty($this->value) || is_null($this->value)) {
+            return $this->value = '';
+        }
+
         if (isset($this->methods[$name]) && is_callable($this->methods[$name])) {
             return $this->methods[$name]();
         }
@@ -58,15 +67,18 @@ class FileWrapper
 
     /**
      * @param  string  $dimension width x height (e.g. 200x200)
-     * @return  string
+     * @return  mixed  <string|null>
      */
-    public function url($dimension = null): String
+    public function url($dimension = null): mixed
     {
+        if ((empty($this->value) || is_null($this->value))) {
+            return $this->value = '';
+        }
+
         if (!$dimension) {
             $file = Storage::disk($this->disk)->url($this->value);
         } else {
             $file = $this->resize($dimension, $this->value);
-            // $file = Storage::disk($this->disk)->url($this->value);
         }
 
         return $file;
@@ -145,6 +157,28 @@ class FileWrapper
             return false;
         }
 
+        return true;
+    }
+
+
+    /**
+     * @return  bool
+     */
+
+    public function remove(): bool
+    {
+        if ((empty($this->value) || is_null($this->value))) {
+            return true;
+        }
+
+        $eraseFile = Storage::disk($this->disk)->delete($this->value);
+        if ($eraseFile) {
+            if (is_object($this->model)) {
+                $this->model->update([$this->key => null]);
+            }
+        } else {
+            return false;
+        }
         return true;
     }
 

@@ -11,7 +11,8 @@ class FileWrapper
     protected $value;
     protected $className;
     protected $id;
-    protected $data = [];
+
+    protected $methods = [];
 
     protected $driver;
     protected $disk;
@@ -24,9 +25,11 @@ class FileWrapper
         $this->driver = config('filecaster.driver');
         $this->disk = config('filecaster.disk') ? config('filecaster.disk') : 'public';
 
-        $this->data = [
+        $this->methods = [
             'url' => [$this, 'url'],
             'name' => [$this, 'name'],
+            'path' => [$this, 'path'],
+            'dir' => [$this, 'dir'],
             'size' => [$this, 'size'],
             'extension' => [$this, 'extension'],
             'mime' => [$this, 'mime'],
@@ -42,10 +45,9 @@ class FileWrapper
 
     public function __get($name)
     {
-        if (isset($this->data[$name]) && is_callable($this->data[$name])) {
-            return $this->data[$name]();
+        if (isset($this->methods[$name]) && is_callable($this->methods[$name])) {
+            return $this->methods[$name]();
         }
-
         throw new \Exception("Property or method '$name' does not exist.");
     }
 
@@ -69,10 +71,12 @@ class FileWrapper
 
         return $file;
     }
+
+
     /**
      * @return  string
      */
-    public function name(): String
+    protected function name(): String
     {
         $file = Storage::disk($this->disk)->url($this->value);
         $filenameWithExt = basename($file);
@@ -83,7 +87,26 @@ class FileWrapper
     /**
      * @return  string
      */
-    public function size(): String
+    protected function path(): String
+    {
+        return Storage::disk($this->disk)->path($this->value);
+    }
+
+    /**
+     * @return  string
+     */
+    protected function dir(): String
+    {
+        $file = Storage::disk($this->disk)->path($this->value);
+        $path = dirname($file);
+
+        return $path;
+    }
+
+    /**
+     * @return  string
+     */
+    protected function size(): String
     {
         return Storage::disk($this->disk)->size($this->value);
     }
@@ -91,7 +114,7 @@ class FileWrapper
     /**
      * @return  string
      */
-    public function extension(): String
+    protected function extension(): String
     {
         $file = Storage::disk($this->disk)->url($this->value);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
@@ -101,12 +124,12 @@ class FileWrapper
     /**
      * @return  string
      */
-    public function mime(): String
+    protected function mime(): String
     {
         return Storage::disk($this->disk)->mimeType($this->value);
     }
 
-    public function lastModified(): String
+    protected function lastModified(): String
     {
         $lastModified = Storage::disk($this->disk)->lastModified($this->value);
         return date('Y-m-d H:i:s', $lastModified);
@@ -116,7 +139,7 @@ class FileWrapper
     /* 
     * @return  bool
     */
-    public function exists(): bool
+    protected function exists(): bool
     {
         if (!$this->value || ($this->value && !Storage::disk($this->disk)->exists($this->value))) {
             return false;
@@ -125,13 +148,14 @@ class FileWrapper
         return true;
     }
 
+
     /*
     * @param  string  $size
     * @param  string  $path
     *
     * @return  mixed  <string|null>
     */
-    public function resize($size = null, $path = null): mixed
+    protected function resize($size = null, $path = null): mixed
     {
         $name = $this->name;
         $extension = $this->extension;

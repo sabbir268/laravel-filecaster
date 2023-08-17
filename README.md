@@ -91,19 +91,27 @@ $blog = Blog::find(1);
 echo $blog->image; // output: /storage/blog/1/image.jpg
 ```
 
-There several methods you can use to retrieve the file information.
+There several methods/property you can use to retrieve the file information.
 
 ```php
 // get file name
 $blog->image->name;
+
 // get file extension
 $blog->image->extension;
+
 // get file size
 $blog->image->size;
+
 // get file mime type
 $blog->image->mime;
+
 // get file url
 $blog->image->url;
+
+// get file path
+$blog->image->path;
+
 // check if file exists
 $blog->image->exists;
 ```

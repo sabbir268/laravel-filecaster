@@ -91,31 +91,48 @@ $blog = Blog::find(1);
 echo $blog->image; // output: /storage/blog/1/image.jpg
 ```
 
-There several methods/property you can use to retrieve the file information.
+#### There several methods/property you can use to retrieve the file information.
 
 ```php
 // get file name
-$blog->image->name;
+$blog->image->name; // output: image.jpg
 
 // get file extension
-$blog->image->extension;
+$blog->image->extension; // output: jpg
 
 // get file size
-$blog->image->size;
+$blog->image->size; // output: 1024
 
 // get file mime type
-$blog->image->mime;
+$blog->image->mime; // output: image/jpeg
 
-// get file url
-$blog->image->url;
+// get file http url
+$blog->image->url; // output: http://example.com/storage/blog/1/image.jpg
 
-// get file path
-$blog->image->path;
+// get file full path
+$blog->image->path; // output: /var/www/html/storage/app/public/blog/1/image.jpg
+
+// get storage directory
+$blog->image->dir; // output: /var/www/html/storage/app/public/blog/1
 
 // check if file exists
-$blog->image->exists;
+$blog->image->exists; // output: true
+```
+
+If you want to get manipulated image url, you can use `ur('WIDTHxHEIGHT')` method.
+
+```php
+$blog->image->url('200x200'); // output: /storage/blog/1/image-200x200.jpg
+```
+
+Note: It will create a manipulated image in storage cache directory. You will need `gd` or `imagick` extension installed in your server.
+
+If you want to delete the file, you can use `delete()` method.
+
+```php
+$blog->image->remove(); // output: true
 ```
 
 ## Contribution
 
-You're open to create any Pull request.
+You're open to create any pull request.

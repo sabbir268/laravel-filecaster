@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabbirh\LaravelFileCaster;
+namespace Sabbir268\LaravelFileCaster;
 
 use Illuminate\Support\ServiceProvider;
-use Sabbirh\LaravelFileCaster\FileCaster;
+use Sabbir268\LaravelFileCaster\FileCaster;
 
 class FileCasterServiceProvider extends ServiceProvider
 {

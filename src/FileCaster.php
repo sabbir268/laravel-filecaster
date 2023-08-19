@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabbirh\LaravelFileCaster;
+namespace Sabbir268\LaravelFileCaster;
 
 
-use Sabbirh\LaravelFileCaster\Helpers\FileWrapper;
+use Sabbir268\LaravelFileCaster\Helpers\FileWrapper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;

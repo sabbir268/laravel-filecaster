@@ -1,5 +1,5 @@
 {
-    "name": "sabbirh/laravel-filecaster",
+    "name": "sabbir268/laravel-filecaster",
     "description": "A simple file casting for laravel model to handle file upload and retrieve",
     "keywords": [
         "file",
@@ -16,7 +16,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Sabbirh\\LaravelFileCaster\\": "src/"
+            "Sabbir268\\LaravelFileCaster\\": "src/"
         }
     },
     "authors": [{
@@ -35,10 +35,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Sabbirh\\LaravelFileCaster\\FileCasterServiceProvider"
+                "Sabbir268\\LaravelFileCaster\\FileCasterServiceProvider"
             ],
             "aliases": {
-                "FileCaster": "Sabbirh\\LaravelFileCaster\\\\FileCaster\\Facades"
+                "FileCaster": "Sabbir268\\LaravelFileCaster\\\\FileCaster\\Facades"
             }
         }
     }

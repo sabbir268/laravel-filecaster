@@ -7,29 +7,18 @@ A simple file casting for laravel model to handle file upload and retrieve
 ## Installation
 
 ```sh
-composer require sabbirh/laravel-filecaster
+composer require sabbir268/laravel-filecaster
 ```
 
 ## Configuration
 
-**Service Provider Registration**
-In `config/app.php`, add in `providers` array -
-
-```php
-'providers' => ServiceProvider::defaultProviders()->merge([
-    // ...
-    \Sabbirh\LaravelFileCaster\FileCasterServiceProvider::class,
-    // ...
-])->toArray(),
-```
-
-**Facade Class Alias**
-Add in aliases array -
+**Cast Class Alias**
+Add in aliases array (optional)
 
 ```php
 'aliases' => Facade::defaultAliases()->merge([
     // ...
-    'filecast' => \Sabbirh\LaravelFileCaster\FileCaster::class,
+    'filecast' => Sabbir268\LaravelFileCaster\FileCaster::class,
     // ...
 ])->toArray(),
 ```
@@ -39,7 +28,7 @@ Add in aliases array -
 #### Import FileCaster class
 
 ```php
-use Sabbirh\LaravelFileCaster\FileCaster;
+use Sabbir268\LaravelFileCaster\FileCaster;
 ```
 
 ### Example: manage "image" file upload and retrieve
@@ -48,7 +37,7 @@ Let's assume, we have Blog model and there is a column `image` to store image fi
 
 ```php
 use App\Models;
-use Sabbirh\LaravelFileCaster\FileCaster;
+use Sabbir268\LaravelFileCaster\FileCaster;
 
 class Blog extends Model
 {
@@ -61,7 +50,7 @@ class Blog extends Model
 
 ```
 
-Or, you can use `filecast` as alias of `Sabbirh\LaravelFileCaster\FileCaster` class.
+Or, you can use `filecast` as alias of `Sabbir268\LaravelFileCaster\FileCaster` class.
 
 ```php
 use App\Models;
@@ -122,7 +111,7 @@ $blog->image->exists; // output: true
 If you want to get manipulated image url, you can use `ur('WIDTHxHEIGHT')` method.
 
 ```php
-$blog->image->url('200x200'); // output: /storage/blog/1/image-200x200.jpg
+$blog->image->url('200x200'); // output: http://example.com/storage/cache/200x200/blog-2-image1.jpg
 ```
 
 Note: It will create a manipulated image in storage cache directory. You will need `gd` or `imagick` extension installed in your server.

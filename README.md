@@ -116,7 +116,7 @@ $blog->image->url('200x200'); // output: http://example.com/storage/cache/200x20
 
 Note: It will create a manipulated image in storage cache directory. You will need `gd` or `imagick` extension installed in your server.
 
-If you want to delete the file, you can use `delete()` method.
+If you want to delete the file, you can use `remove()` method.
 
 ```php
 $blog->image->remove(); // output: true

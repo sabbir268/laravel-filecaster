@@ -1,6 +1,6 @@
 {
     "name": "sabbir268/laravel-filecaster",
-    "description": "A simple file casting for laravel model to handle file upload and retrieve",
+    "description": "A simple casting class for laravel model to handle file upload and retrieve",
     "keywords": [
         "file",
         "file-upload",

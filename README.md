@@ -23,6 +23,12 @@ Add in aliases array (optional)
 ])->toArray(),
 ```
 
+Publish config file
+
+```sh
+php artisan vendor:publish --provider="Sabbir268\LaravelFileCaster\FileCasterServiceProvider"
+```
+
 ## Use from Model
 
 #### Import FileCaster class

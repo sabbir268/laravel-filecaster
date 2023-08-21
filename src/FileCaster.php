@@ -11,6 +11,13 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 class FileCaster implements CastsAttributes
 {
 
+    protected $disk;
+
+    public function __construct()
+    {
+        $this->disk = config('filecaster.disk') ?? 'public';
+    }
+
     /**
      * Cast the given value.
      *
@@ -18,7 +25,7 @@ class FileCaster implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $class = strtolower(substr(get_class($model), strrpos(get_class($model), '\\') + 1));
+        $class = $this->getClassName($model);
         return new FileWrapper($value, $model, $key);
     }
 
@@ -31,23 +38,24 @@ class FileCaster implements CastsAttributes
     {
         if (is_file($value)) {
             if (isset($attributes[$key])) {
-                if (Storage::disk('public')->exists($attributes[$key])) {
-                    Storage::disk('public')->delete($attributes[$key]);
+                if (Storage::disk($this->disk)->exists($attributes[$key])) {
+                    Storage::disk($this->disk)->delete($attributes[$key]);
                 }
             }
             $file = $value;
-            $class = strtolower(substr(get_class($model), strrpos(get_class($model), '\\') + 1));
+            $class = $this->getClassName($model);
             $id = $this->getId($attributes, $model);
-            $filenameWithExt = $file->getClientOriginalName();
-            $path = $class . '/' . $id;
-            $value = $file->storeAs($path, $filenameWithExt, 'public');
+
+            $filenameWithExt = $this->getFileName($file);
+            $path = $this->filePath($model, $attributes);
+            $value = $file->storeAs($path, $filenameWithExt, $this->disk);
             return $value;
         } else {
             return $value;
         }
     }
 
-    public function getId($attributes = null, $modelName = null)
+    protected function getId($attributes = null, $modelName = null)
     {
         if (isset($attributes['id'])) {
             return $attributes['id'];
@@ -58,6 +66,77 @@ class FileCaster implements CastsAttributes
             } else {
                 return 1;
             }
+        }
+    }
+
+    /**
+     * @param  Model  $model
+     * @return  mixed  <string>
+     */
+    protected function getClassName(Model $model): string
+    {
+        return strtolower(substr(get_class($model), strrpos(get_class($model), '\\') + 1));
+    }
+
+    /**
+     * @param  Model  $model
+     * @param  array<string, mixed>  $attributes
+     * @return  mixed  <string|null>
+     */
+    protected function filePath(Model $model, $attributes)
+    {
+        $definedPath = config('filecaster.path');
+        if ($definedPath == 'by_model_name_and_id') {
+            $class = $this->getClassName($model);
+            $id = $this->getId($attributes, $model);
+            return $class . '/' . $id;
+        } elseif ($definedPath == 'defined_path_in_model') {
+            return $model->file_path;
+        } else {
+            throw new \Exception("Invalid path defined in config");
+        }
+    }
+
+    /**
+     * @param  Model  $model
+     * @param  array<string, mixed>  $attributes
+     * @return  mixed  <string|null>
+     */
+    protected function pathByModelNameAndId($model, $attributes)
+    {
+        $class = $this->getClassName($model);
+        $id = $this->getId($attributes, $model);
+        $path = $class . '/' . $id;
+        return $path;
+    }
+
+    /**
+     * @param  Model  $model
+     * @return  mixed  <string|null>
+     */
+    protected function pathByDefinedPathInModel($model)
+    {
+        if (!isset($model->file_upload_path)) {
+            throw new \Exception("Model does not have a variable named file_upload_path");
+        }
+        $path = $model->file_upload_path;
+    }
+
+    /**
+     * @param File  $file
+     * @return  mixed  <string|null>
+     */
+    protected function getFileName($file)
+    {
+        $fileName = config('filecaster.file_name');
+        if ($fileName == 'original_file_name') {
+            return $file->getClientOriginalName();
+        } elseif ($fileName == 'random_name') {
+            return rand(100000, 999999) . '.' . $file->getClientOriginalExtension();
+        } elseif ($fileName == 'hash_name') {
+            return $file->hashName();
+        } else {
+            throw new \Exception("Invalid file name defined in config");
         }
     }
 }

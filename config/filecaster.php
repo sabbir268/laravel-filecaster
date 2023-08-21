@@ -27,4 +27,28 @@ return [
     */
 
     'driver' => 'gd',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | File path
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the file path that should be used
+    | Supported paths: "by_model_name_and_id", "specific_directory", "defined_path_in_model"
+    |
+    */
+
+    'path' => 'by_model_name_and_id',
+
+    /*
+    |--------------------------------------------------------------------------
+    | File name
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the file name that should be used
+    | Supported names: "original_file_name", "random_name", "hash_name"
+    |
+    */
+    'file_name' => 'original_file_name',
 ];

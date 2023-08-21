@@ -35,7 +35,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the file path that should be used
-    | Supported paths: "by_model_name_and_id", "specific_directory", "defined_path_in_model"
+    | Supported paths: "by_model_name_and_id", "defined_path_in_model", "default"
+    |
+    | "by_model_name_and_id" will create directory with model name and id like: "user/1"
+    | "defined_path_in_model" will create directory which is defined in model, in model there must be property public $fileUploadPath
+    | "default" will store file in Storage path
     |
     */
 
@@ -47,7 +51,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the file name that should be used
-    | Supported names: "original_file_name", "random_name", "hash_name"
+    | Supported names: "original_file_name", "hash_name"
     |
     */
     'file_name' => 'original_file_name',

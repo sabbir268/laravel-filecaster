@@ -3,9 +3,10 @@
 namespace Sabbir268\LaravelFileCaster;
 
 
-use Sabbir268\LaravelFileCaster\Helpers\FileWrapper;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Sabbir268\LaravelFileCaster\Helpers\FileWrapper;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class FileCaster implements CastsAttributes
@@ -87,11 +88,9 @@ class FileCaster implements CastsAttributes
     {
         $definedPath = config('filecaster.path');
         if ($definedPath == 'by_model_name_and_id') {
-            $class = $this->getClassName($model);
-            $id = $this->getId($attributes, $model);
-            return $class . '/' . $id;
+            return $this->pathByModelNameAndId($model, $attributes);
         } elseif ($definedPath == 'defined_path_in_model') {
-            return $model->file_path;
+            return $this->pathByDefinedPathInModel($model);
         } else {
             throw new \Exception("Invalid path defined in config");
         }
@@ -102,7 +101,7 @@ class FileCaster implements CastsAttributes
      * @param  array<string, mixed>  $attributes
      * @return  mixed  <string|null>
      */
-    protected function pathByModelNameAndId($model, $attributes)
+    protected function pathByModelNameAndId(Model $model, $attributes)
     {
         $class = $this->getClassName($model);
         $id = $this->getId($attributes, $model);
@@ -114,12 +113,12 @@ class FileCaster implements CastsAttributes
      * @param  Model  $model
      * @return  mixed  <string|null>
      */
-    protected function pathByDefinedPathInModel($model)
+    protected function pathByDefinedPathInModel(Model $model)
     {
-        if (!isset($model->file_upload_path)) {
-            throw new \Exception("Model does not have a variable named file_upload_path");
+        if (!isset($model->fileUploadPath)) {
+            throw new \Exception("Model does not have a variable named fileUploadPath");
         }
-        $path = $model->file_upload_path;
+        return $model->fileUploadPath;
     }
 
     /**
@@ -131,8 +130,6 @@ class FileCaster implements CastsAttributes
         $fileName = config('filecaster.file_name');
         if ($fileName == 'original_file_name') {
             return $file->getClientOriginalName();
-        } elseif ($fileName == 'random_name') {
-            return rand(100000, 999999) . '.' . $file->getClientOriginalExtension();
         } elseif ($fileName == 'hash_name') {
             return $file->hashName();
         } else {

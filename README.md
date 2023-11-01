@@ -98,6 +98,13 @@ $blog->image->extension; // output: jpg
 // get file size
 $blog->image->size; // output: 1024
 
+// get image width
+$blog->image->width; // output: 200
+
+// get image height
+
+$blog->image->height; // output: 200
+
 // get file mime type
 $blog->image->mime; // output: image/jpeg
 
@@ -127,6 +134,9 @@ If you want to delete the file, you can use `remove()` method.
 ```php
 $blog->image->remove(); // output: true
 ```
+
+
+
 
 ## Contribution
 

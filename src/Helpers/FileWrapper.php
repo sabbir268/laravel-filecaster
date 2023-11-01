@@ -18,6 +18,8 @@ class FileWrapper
     protected $driver;
     protected $disk;
 
+    protected $supportedExtensions = ['jpg', 'png', 'gif', 'jpeg'];
+
     public function __construct($value, $model, $key)
     {
         $this->value = $value;
@@ -37,6 +39,8 @@ class FileWrapper
             'mime' => [$this, 'mime'],
             'lastModified' => [$this, 'lastModified'],
             'exists' => [$this, 'exists'],
+            'height' => [$this, 'height'],
+            'width' => [$this, 'width'],
         ];
         // check if value is empty or null
         if ((empty($this->value) || is_null($this->value))) {
@@ -126,9 +130,35 @@ class FileWrapper
     /**
      * @return  string
      */
+    protected function height(): String
+    {
+        $file = Storage::disk($this->disk)->path($this->value);
+        if (!in_array($this->extension, $this->supportedExtensions)) {
+            return '';
+        }
+        $height = isset(getimagesize($file)[1]) ? getimagesize($file)[1] : '';
+        return $height;
+    }
+
+    /**
+     * @return  string
+     */
+    protected function width(): String
+    {
+        $file = Storage::disk($this->disk)->path($this->value);
+        if (!in_array($this->extension, $this->supportedExtensions)) {
+            return '';
+        }
+        $width = isset(getimagesize($file)[0]) ? getimagesize($file)[0] : '';
+        return $width;
+    }
+
+    /**
+     * @return  string
+     */
     protected function extension(): String
     {
-        $file = Storage::disk($this->disk)->url($this->value);
+        $file = Storage::disk($this->disk)->path($this->value);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
         return $extension;
     }
@@ -220,9 +250,9 @@ class FileWrapper
 
             $imagePath = Storage::disk($this->disk)->path($this->value);
 
-            $supportedExtensions = ['jpg', 'png', 'gif', 'jpeg'];
 
-            if (!in_array($extension, $supportedExtensions)) {
+
+            if (!in_array($extension, $this->supportedExtensions)) {
                 return Storage::disk($this->disk)->url($name);
             }
 

@@ -31,15 +31,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | File path
+    | File path options
     |--------------------------------------------------------------------------
     |
     | Here you may specify the file path that should be used
-    | Supported paths: "by_model_name_and_id", "defined_path_in_model", "default"
+    | Supported path options: "by_model_name_and_id", "defined_path_in_model"
     |
     | "by_model_name_and_id" will create directory with model name and id like: "user/1"
-    | "defined_path_in_model" will create directory which is defined in model, in model there must be property public $fileUploadPath
-    | "default" will store file in Storage path
+    | "defined_path_in_model" will create directory which is defined in model, in model there must be public a property $fileUploadPath
     |
     */
 

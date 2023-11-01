@@ -255,30 +255,26 @@ class FileWrapper
             if (!in_array($extension, $this->supportedExtensions)) {
                 return Storage::disk($this->disk)->url($name);
             }
-
             if (!extension_loaded($this->driver)) {
                 throw new \Exception("$this->driver driver not installed");
             }
 
             Image::configure(['driver' => $this->driver]);
 
-            $imgThumb = "/cache/{$cacheFolder}/";
-
-            if (!$fit) {
-                $theimg = Image::make($imagePath)->resize($width, $height, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->stream($extension, 100);
-            } else {
-                $theimg = Image::make($imagePath)->fit($width, $height, function ($constraint) {
-                    // $constraint->aspectRatio();
-                    // $constraint->upsize();
-                })->stream($extension, 100);
-            }
-
+            $imgThumb = "cache/{$cacheFolder}/";
             $cacheFileName = str_replace('/', '-', $parentDir) . '-' . $filename;
             $savePath = $imgThumb . $cacheFileName . '.' . $extension;
-            // check if file exists in cache
             if (!Storage::disk($this->disk)->exists($savePath)) {
+                if (!$fit) {
+                    $theimg = Image::make($imagePath)->resize($width, $height, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->stream($extension, 100);
+                } else {
+                    $theimg = Image::make($imagePath)->fit($width, $height, function ($constraint) {
+                        // $constraint->aspectRatio();
+                        // $constraint->upsize();
+                    })->stream($extension, 100);
+                }
                 Storage::disk($this->disk)->put($savePath, $theimg);
             }
             return Storage::disk($this->disk)->url($savePath);

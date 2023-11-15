@@ -13,10 +13,12 @@ class FileCaster implements CastsAttributes
 {
 
     protected $disk;
+    protected $namePrefix;
 
-    public function __construct()
+    public function __construct($namePrefix = '')
     {
         $this->disk = config('filecaster.disk') ?? 'public';
+        $this->namePrefix = $namePrefix;
     }
 
     /**
@@ -128,12 +130,18 @@ class FileCaster implements CastsAttributes
     protected function getFileName($file)
     {
         $fileName = config('filecaster.file_name');
+        $namePrefix = $this->namePrefix;
+        $name = '';
         if ($fileName == 'original_file_name') {
-            return $file->getClientOriginalName();
+            $name = $file->getClientOriginalName();
         } elseif ($fileName == 'hash_name') {
-            return $file->hashName();
+            $name = $file->hashName();
         } else {
             throw new \Exception("Invalid file name defined in config");
         }
+        if ($namePrefix && $namePrefix != '') {
+            $name = $namePrefix . '-' . $name;
+        }
+        return $name;
     }
 }

@@ -256,7 +256,7 @@ class FileWrapper
                 return Storage::disk($this->disk)->url($name);
             }
             if (!extension_loaded($this->driver)) {
-                throw new \Exception("$this->driver driver not installed");
+                throw new \Exception($this->driver . "driver not installed");
             }
 
             Image::configure(['driver' => $this->driver]);

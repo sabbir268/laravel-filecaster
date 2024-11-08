@@ -38,7 +38,7 @@
                 "Sabbir268\\LaravelFileCaster\\FileCasterServiceProvider"
             ],
             "aliases": {
-                "FileCaster": "Sabbir268\\LaravelFileCaster\\\\FileCaster\\Facades"
+                "FileCaster": "Sabbir268\\LaravelFileCaster\\FileCaster\\Facades"
             }
         }
     }

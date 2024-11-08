@@ -178,7 +178,7 @@ class FileWrapper
     }
 
 
-    /* 
+    /*
     * @return  bool
     */
     protected function exists(): bool
@@ -253,7 +253,7 @@ class FileWrapper
 
 
             if (!in_array($extension, $this->supportedExtensions)) {
-                return Storage::disk($this->disk)->url($name);
+                return Storage::disk($this->disk)->url($path);
             }
             if (!extension_loaded($this->driver)) {
                 throw new \Exception($this->driver . "driver not installed");

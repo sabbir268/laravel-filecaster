@@ -73,7 +73,7 @@ class FileWrapper
      * @param  string  $dimension width x height (e.g. 200x200)
      * @return  mixed  <string|null>
      */
-    public function url($dimension = null): mixed
+    public function url($dimension = null, $weight = null): mixed
     {
         if ((empty($this->value) || is_null($this->value))) {
             return $this->value = '';
@@ -82,7 +82,7 @@ class FileWrapper
         if (!$dimension) {
             $file = Storage::disk($this->disk)->url($this->value);
         } else {
-            $file = $this->resize($dimension, $this->value);
+            $file = $this->resize($dimension, $this->value, $weight);
         }
 
         return $file;
@@ -219,7 +219,7 @@ class FileWrapper
     *
     * @return  mixed  <string|null>
     */
-    protected function resize($size = null, $path = null): mixed
+    protected function resize($size = null, $path = null, $weight = null): mixed
     {
         $name = $this->name;
         $extension = $this->extension;
@@ -228,6 +228,10 @@ class FileWrapper
         $cacheFolder = $size;
         $fit = false;
         $parentDir = Str::beforeLast($path, '/');
+
+        if(!$weight){
+            $weight = 100;
+        }
 
         if (!is_null($size)) {
             if (strpos($size, 'f') !== false) {
@@ -244,6 +248,7 @@ class FileWrapper
             if (empty($size['1'])) {
                 $size['1'] = null;
             }
+
 
             $width = $size['0'];
             $height = $size['1'];
@@ -269,12 +274,12 @@ class FileWrapper
                     $theimg = Image::make($imagePath)->resize($width, $height, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
-                    })->stream($extension, 100);
+                    })->stream($extension, $weight);
                 } else {
                     $theimg = Image::make($imagePath)->fit($width, $height, function ($constraint) {
                         // $constraint->aspectRatio();
                         // $constraint->upsize();
-                    })->stream($extension, 100);
+                    })->stream($extension, $weight);
                 }
                 Storage::disk($this->disk)->put($savePath, $theimg);
             }

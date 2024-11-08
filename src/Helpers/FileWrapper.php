@@ -268,6 +268,7 @@ class FileWrapper
                 if (!$fit) {
                     $theimg = Image::make($imagePath)->resize($width, $height, function ($constraint) {
                         $constraint->aspectRatio();
+                        $constraint->upsize();
                     })->stream($extension, 100);
                 } else {
                     $theimg = Image::make($imagePath)->fit($width, $height, function ($constraint) {

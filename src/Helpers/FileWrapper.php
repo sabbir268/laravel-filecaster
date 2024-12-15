@@ -260,7 +260,7 @@ class FileWrapper
             $height = $size['1'];
 
 
-            if ($this->storage == 'cloud') {
+            if ($this->storageType == 'cloud') {
                 $imagePath = tempnam(sys_get_temp_dir(), 'image');
                 copy(Storage::disk($this->disk)->url($this->value), $imagePath);
             } else {

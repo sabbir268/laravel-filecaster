@@ -17,6 +17,7 @@ class FileWrapper
 
     protected $driver;
     protected $disk;
+    protected $storageType;
 
     protected $supportedExtensions = ['jpg', 'png', 'gif', 'jpeg'];
 
@@ -28,6 +29,11 @@ class FileWrapper
 
         $this->driver = config('filecaster.driver');
         $this->disk = config('filecaster.disk') ? config('filecaster.disk') : 'public';
+        if ($this->disk == 's3') {
+            $this->storageType = 'cloud';
+        } else {
+            $this->storageType = config('filecaster.storage') ?? 'local';
+        }
 
         $this->methods = [
             'url' => [$this, 'url'],
@@ -229,7 +235,7 @@ class FileWrapper
         $fit = false;
         $parentDir = Str::beforeLast($path, '/');
 
-        if(!$weight){
+        if (!$weight) {
             $weight = 100;
         }
 
@@ -253,7 +259,13 @@ class FileWrapper
             $width = $size['0'];
             $height = $size['1'];
 
-            $imagePath = Storage::disk($this->disk)->path($this->value);
+
+            if ($this->storage == 'cloud') {
+                $imagePath = tempnam(sys_get_temp_dir(), 'image');
+                copy(Storage::disk($this->disk)->url($this->value), $imagePath);
+            } else {
+                $imagePath = Storage::disk($this->disk)->path($this->value);
+            }
 
 
 

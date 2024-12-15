@@ -12,6 +12,15 @@ return [
     */
     'disk' => 'public',
 
+    /**
+     * File storage
+     *
+     * Here you may specify the file storage that should be used
+     * Supported storages: "local", "cloud"
+     */
+
+    'storage' => 'local',
+
 
     /*
     |--------------------------------------------------------------------------
